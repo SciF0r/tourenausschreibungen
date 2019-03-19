@@ -1,11 +1,4 @@
-import bs4
-import ssl
-import urllib.request as req
+from tour_parser import TourParser
 
-def get_html(url):
-    """Returns a BeautifulSoup object of the given url"""
-    page = req.urlopen(url, context=ssl._create_unverified_context())
-    return bs4.BeautifulSoup(page, 'html5lib')
-    
-page = get_html('https://www.sac-aarau.ch/aktivitaeten/kalender/')
-print(page.prettify());
+parser = TourParser('https://www.sac-aarau.ch/aktivitaeten/kalender/', '01.04.2019', '30.06.2019')
+parser.parse()
