@@ -10,7 +10,9 @@ class TourParser(object):
         self.__read_page(url, startDate, endDate)
 
     def parse(self):
-        print(self.__page.prettify())
+        table = self.__page.find('table', class_='program')
+        for row in table.find_all('tr'):
+            print(row.prettify())
 
     def __read_page(self, url, start_date, end_date):
         """Returns a BeautifulSoup object of the given url"""
