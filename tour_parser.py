@@ -2,6 +2,7 @@ import bs4
 import json
 import ssl
 import urllib
+import urllib.request as req
 
 class TourParser(object):
     """Parse tours retrieved from the SAC Aarau tour page"""
@@ -26,7 +27,7 @@ class TourParser(object):
             'end': end_date,
             'published': 'on'
         }
-        with urllib.request.urlopen(
+        with req.urlopen(
             url,
             context=ssl._create_unverified_context(),
             data=urllib.parse.urlencode(data).encode("utf-8")
