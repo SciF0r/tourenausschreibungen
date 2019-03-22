@@ -12,7 +12,6 @@ class TourCleaner(object):
         return self.__tours
 
     def __apply_rule(self, pattern, replacement):
-        print('replacing all {0} with {1}'.format(pattern, replacement))
         for tour_type, tours_of_type in self.__tours.items():
             new_tours = []
             for tour in tours_of_type:
@@ -25,6 +24,5 @@ class TourCleaner(object):
                         right = re.sub(pattern, replacement, right)
                     new_tour.append((left, right))
                 new_tours.append(new_tour)
-
             self.__tours[tour_type] = new_tours
 

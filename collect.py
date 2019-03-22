@@ -11,7 +11,7 @@ tours = parser.parse()
 
 cleaner = TourCleaner(tours)
 with open('rules.txt', 'r') as rules_file:
-    rules = [line.split(';', 2) for line in rules_file.read().splitlines()]
+    rules = [line.split('/', 2) for line in rules_file.read().splitlines()]
 cleaned_tours = cleaner.clean(rules)
 
 export_file_name = '{0}_tourenausschreibungen_{1}_{2}.docx'.format(
