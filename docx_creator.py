@@ -11,9 +11,9 @@ class DocxCreator:
         self.__document = Document(self.__document)
 
     def create(self):
-        for tour_type, tours in self.__tours.items():
+        for tour_type, tours_of_type in self.__tours.items():
             self.__document.add_heading(tour_type, 2)
-            for tour in tours:
+            for tour in tours_of_type:
                 self.__add_tour(tour)
         self.__document.save(self.__file_name)
 
