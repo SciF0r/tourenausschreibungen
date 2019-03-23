@@ -1,12 +1,19 @@
+import sys
 from datetime import datetime
 from docx_creator import DocxCreator
 from tour_cleaner import TourCleaner
 from tour_parser import TourParser
 
-start_date = '01.04.2019'
-end_date = '30.06.2019'
+if len(sys.argv) != 3:
+    print('Usage: {0} start_date end_date (format: dd.mm.YYYY)'.format(sys.argv[0]))
+    sys.exit(1)
 
-parser = TourParser('https://www.sac-aarau.ch/aktivitaeten/kalender/', start_date, end_date)
+start_date = sys.argv[1]
+end_date = sys.argv[2]
+url = 'https://www.sac-aarau.ch/aktivitaeten/kalender/'
+
+print('Getting tours from {0}, {1} to {2}'.format(url, start_date, end_date))
+parser = TourParser(url, start_date, end_date)
 tours = parser.parse()
 
 cleaner = TourCleaner(tours)
