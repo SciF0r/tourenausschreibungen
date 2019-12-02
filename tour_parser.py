@@ -1,13 +1,14 @@
 import bs4
 import json
+import requests
 import ssl
-import urllib
-import urllib.request as req
 
 class TourParser(object):
     """Parse tours retrieved from the SAC Aarau tour page"""
 
-    def __init__(self, url, startDate, endDate):
+    def __init__(self, url, startDate, endDate, username, password):
+        self.__session = requests.Session()
+        self.__login(username, password)
         self.__read_page(url, startDate, endDate)
 
     def parse(self):
@@ -20,6 +21,14 @@ class TourParser(object):
             self.__process_row(row)
         return self.__tours;
 
+    def __login(self, username, password):
+        data = {
+            'site': 'sac-aarau',
+            'username': username,
+            'password': password
+        }
+        self.__session.post('https://ssl.dropnet.ch/manager/login', verify=False, data=data)
+
     def __read_page(self, url, start_date, end_date):
         """Store a BeautifulSoup object of the given url"""
         data = {
@@ -27,12 +36,8 @@ class TourParser(object):
             'end': end_date,
             'published': 'on'
         }
-        with req.urlopen(
-            url,
-            context=ssl._create_unverified_context(),
-            data=urllib.parse.urlencode(data).encode("utf-8")
-        ) as page:
-            self.__page = bs4.BeautifulSoup(page, 'html5lib')
+        r = self.__session.post(url, verify=False, data=data)
+        self.__page = bs4.BeautifulSoup(r.text, 'html5lib')
 
     def __process_row(self, row):
         """Process a row and update the tours object with its contents"""
@@ -45,11 +50,10 @@ class TourParser(object):
         left_cell, right_cell = cells
         if not left_cell.string and not right_cell.string:
             return
-        skip_row = self.__process_cell_class(left_cell)
-        skip_row = skip_row or self.__process_cell_class(right_cell)
+        skip_row = self.__process_cell_class(left_cell) or self.__process_cell_class(right_cell)
         if skip_row:
             return
-        self.__add_key_value_tuple_to_current_tour(left_cell.string, right_cell.string)
+        self.__add_key_value_tuple_to_current_tour(left_cell.get_text('\n'), right_cell.get_text('\n'))
 
     def __process_cell_class(self, cell):
         """Process a cell according to its css class"""
@@ -69,6 +73,7 @@ class TourParser(object):
                 self.__tours[self.__current_title].append(self.__current_tour)
             self.__current_tour = []
             return False
+        return False
 
     def __add_key_value_tuple_to_current_tour(self, key, value):
         """Process a cell if no css class is set"""

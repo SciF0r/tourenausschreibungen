@@ -4,16 +4,18 @@ from docx_creator import DocxCreator
 from tour_cleaner import TourCleaner
 from tour_parser import TourParser
 
-if len(sys.argv) != 3:
-    print('Usage: {0} start_date end_date (format: dd.mm.YYYY)'.format(sys.argv[0]))
+if len(sys.argv) != 5:
+    print('Usage: {0} start_date end_date username password (date format: dd.mm.YYYY)'.format(sys.argv[0]))
     sys.exit(1)
 
 start_date = sys.argv[1]
 end_date = sys.argv[2]
-url = 'https://www.sac-aarau.ch/aktivitaeten/kalender/'
+username = sys.argv[3]
+password = sys.argv[4]
+url = 'https://ssl.dropnet.ch/sac-aarau/aktivitaeten/kalender/'
 
 print('Getting tours from {0}, {1} to {2}'.format(url, start_date, end_date))
-parser = TourParser(url, start_date, end_date)
+parser = TourParser(url, start_date, end_date, username, password)
 tours = parser.parse()
 
 cleaner = TourCleaner(tours)
