@@ -19,6 +19,7 @@ class TourParser(object):
         table = self.__page.find('table', class_='program')
         for row in table.find_all('tr'):
             self.__process_row(row)
+        self.__tours[self.__current_title].append(self.__current_tour)
         return self.__tours;
 
     def __login(self, username, password):
@@ -60,7 +61,7 @@ class TourParser(object):
         if not 'class' in cell.attrs:
             return
         if len(cell['class']) > 1:
-            print('More than one css class for cell "{0}"').format(cell.string)
+            print('More than one css class for cell "{0}"'.format(cell.string))
             return False
         cell_type = cell['class'][0]
         if cell_type == 'title':
