@@ -65,6 +65,7 @@ class TourParser(object):
             return False
         cell_type = cell['class'][0]
         if cell_type == 'title':
+            print('Current title: {0}'.format(cell.string))
             self.__current_title = cell.string
             self.__tours[self.__current_title] = []
             self.__current_tour = []
