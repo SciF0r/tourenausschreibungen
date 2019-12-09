@@ -12,3 +12,7 @@
 ^(\d+).--/Fr. \1.--
 , Schriftlich/, schriftlich
 (\d{2}\.-\d{2}\.\d{2}\.)\d{2}(\d{2})/\1\2
+Bhf\.?/Bahnhof
+Abf\./Abfahrt
+Rest\./Restaurant
+selber/selbst
