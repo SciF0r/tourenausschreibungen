@@ -19,6 +19,8 @@ class TourParser(object):
         table = self.__page.find('table', class_='program')
         for row in table.find_all('tr'):
             self.__process_row(row)
+        self.__append_current_tour()
+        self.__print_tours_found()
         self.__tours[self.__current_title].append(self.__current_tour)
         return self.__tours;
 
@@ -65,14 +67,11 @@ class TourParser(object):
             return False
         cell_type = cell['class'][0]
         if cell_type == 'title':
-            print('Current title: {0}'.format(cell.string))
-            self.__current_title = cell.string
-            self.__tours[self.__current_title] = []
-            self.__current_tour = []
+            self.__append_current_tour()
+            self.__prepare_next_title(cell.string)
             return True
         if cell_type == 'datum':
-            if self.__current_tour != []:
-                self.__tours[self.__current_title].append(self.__current_tour)
+            self.__append_current_tour()
             self.__current_tour = []
             return False
         return False
@@ -80,3 +79,20 @@ class TourParser(object):
     def __add_key_value_tuple_to_current_tour(self, key, value):
         """Process a cell if no css class is set"""
         self.__current_tour.append((key, value))
+
+    def __print_tours_found(self):
+        if self.__tours != {}:
+            print('{0} tours'.format(len(self.__tours[self.__current_title])))
+
+    def __prepare_next_title(self, title):
+        self.__print_tours_found()
+        print('\n{0}'.format(title))
+        print('-' * len(title))
+        self.__current_title = title
+        self.__tours[self.__current_title] = []
+        self.__current_tour = []
+
+    def __append_current_tour(self):
+        if self.__current_tour != []:
+            print('{0}'.format(self.__current_tour[0][1]))
+            self.__tours[self.__current_title].append(self.__current_tour)
