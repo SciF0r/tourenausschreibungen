@@ -4,7 +4,7 @@
 \s+([.,:;!?])/\1
 ([.,:;!?])(a-zA-Z)/\1 \2
 (\d+)m/\1 m
-(\d+)Hm/\1 Hm
+(\d+)[ ]?[hH]m/\1 Hm
 (\d+)Uhr/\1 Uhr
 (\d+) h/\1h
 ([\("']) \w+/\1
@@ -16,3 +16,8 @@ Bhf\.?/Bahnhof
 Abf\./Abfahrt
 Rest\./Restaurant
 selber/selbst
+ - / – 
+(\d{1,2}):(\d{2})/\1.\2
+(\d{3,4}) m/\1 m ü.M.
+ [mM]ail/ E-Mail
+[eE][-]?[mM]ail/E-Mail
