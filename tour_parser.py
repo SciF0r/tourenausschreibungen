@@ -1,98 +1,39 @@
-import bs4
-import json
-import requests
-import ssl
+import pandas as pd
 
 class TourParser(object):
-    """Parse tours retrieved from the SAC Aarau tour page"""
+    """Parse tours retrieved from a DropTours xlsx export file"""
+    COL_GROUP = 'Gruppe'
+    COL_START_DATE = 'Startdatum'
+    COL_DURATION = 'Dauer'
+    COL_TOUR_TYPE = 'Tourtyp'
+    COL_COND_REQ = 'Kond. Anforderungen'
+    COL_TECH_REQ = 'Techn. Anforderungen'
+    COL_ACTIVITY = 'Aktivität'
+    COL_FIRST_NAME = 'Vorname'
+    COL_LAST_NAME = 'Name'
 
-    def __init__(self, url, startDate, endDate, username, password):
-        self.__session = requests.Session()
-        self.__login(username, password)
-        self.__read_page(url, startDate, endDate)
 
-    def parse(self):
+    def __init__(self, file_path):
+        self.__cols_year_program = [
+                self.COL_GROUP,
+                self.COL_START_DATE,
+                self.COL_DURATION,
+                self.COL_TOUR_TYPE,
+                self.COL_COND_REQ,
+                self.COL_TECH_REQ,
+                self.COL_ACTIVITY,
+                self.COL_FIRST_NAME,
+                self.COL_LAST_NAME
+        ]
+        self.__read_file(file_path)
+
+    def parse_for_year_program(self):
         """Parse the tours table and return a tours object"""
-        self.__current_title = ''
-        self.__tours = {}
-        self.__current_tour = []
-        table = self.__page.find('table', class_='program')
-        for row in table.find_all('tr'):
-            self.__process_row(row)
-        self.__append_current_tour()
-        self.__print_tours_found()
-        self.__tours[self.__current_title].append(self.__current_tour)
-        return self.__tours;
+        self.__data.sort_values([self.COL_GROUP, self.COL_START_DATE, self.COL_TOUR_TYPE], inplace = True)
+        return pd.DataFrame(self.__data, columns = self.__cols_year_program)
 
-    def __login(self, username, password):
-        data = {
-            'site': 'sac-aarau',
-            'username': username,
-            'password': password
-        }
-        self.__session.post('https://ssl.dropnet.ch/manager/login', verify=False, data=data)
-
-    def __read_page(self, url, start_date, end_date):
-        """Store a BeautifulSoup object of the given url"""
-        data = {
-            'start': start_date,
-            'end': end_date,
-            'published': 'on'
-        }
-        r = self.__session.post(url, verify=False, data=data)
-        self.__page = bs4.BeautifulSoup(r.text, 'html5lib')
-
-    def __process_row(self, row):
-        """Process a row and update the tours object with its contents"""
-        cells = row.find_all('td')
-        if len(cells) == 1:
-            return
-        if len(cells) > 2:
-            print('More than two cells in row, this should not happen!')
-            return
-        left_cell, right_cell = cells
-        if not left_cell.string and not right_cell.string:
-            return
-        skip_row = self.__process_cell_class(left_cell) or self.__process_cell_class(right_cell)
-        if skip_row:
-            return
-        self.__add_key_value_tuple_to_current_tour(left_cell.get_text('\n'), right_cell.get_text('\n'))
-
-    def __process_cell_class(self, cell):
-        """Process a cell according to its css class"""
-        if not 'class' in cell.attrs:
-            return
-        if len(cell['class']) > 1:
-            print('More than one css class for cell "{0}"'.format(cell.string))
-            return False
-        cell_type = cell['class'][0]
-        if cell_type == 'title':
-            self.__append_current_tour()
-            self.__prepare_next_title(cell.string)
-            return True
-        if cell_type == 'datum':
-            self.__append_current_tour()
-            self.__current_tour = []
-            return False
-        return False
-
-    def __add_key_value_tuple_to_current_tour(self, key, value):
-        """Process a cell if no css class is set"""
-        self.__current_tour.append((key, value))
-
-    def __print_tours_found(self):
-        if self.__tours != {}:
-            print('{0} tours'.format(len(self.__tours[self.__current_title])))
-
-    def __prepare_next_title(self, title):
-        self.__print_tours_found()
-        print('\n{0}'.format(title))
-        print('-' * len(title))
-        self.__current_title = title
-        self.__tours[self.__current_title] = []
-        self.__current_tour = []
-
-    def __append_current_tour(self):
-        if self.__current_tour != []:
-            print('{0}'.format(self.__current_tour[0][1]))
-            self.__tours[self.__current_title].append(self.__current_tour)
+    def __read_file(self, file_path):
+        """Store an object with the xls file content"""
+        data = pd.read_csv(file_path, sep = ';')
+        data[self.COL_START_DATE] = pd.to_datetime(data[self.COL_START_DATE])
+        self.__data = data

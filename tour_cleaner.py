@@ -1,3 +1,4 @@
+import pandas as pd
 import re
 
 class TourCleaner(object):
@@ -12,17 +13,9 @@ class TourCleaner(object):
         return self.__tours
 
     def __apply_rule(self, pattern, replacement):
-        for tour_type, tours_of_type in self.__tours.items():
-            new_tours = []
-            for tour in tours_of_type:
-                new_tour = []
-                for line in tour:
-                    left, right = line
-                    if (left is not None):
-                        left = re.sub(pattern, replacement, left)
-                    if (right is not None):
-                        right = re.sub(pattern, replacement, right)
-                    new_tour.append((left, right))
-                new_tours.append(new_tour)
-            self.__tours[tour_type] = new_tours
-
+        for row in range(self.__tours.shape[0]):
+            for column in range(self.__tours.shape[1]):
+                cell_value = self.__tours.iat[row, column]
+                if (type(cell_value) is not str):
+                    continue
+                self.__tours.iat[row, column] = re.sub(pattern, replacement, cell_value)
