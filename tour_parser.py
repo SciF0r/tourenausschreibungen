@@ -29,11 +29,17 @@ class TourParser(object):
 
     def parse_for_year_program(self):
         """Parse the tours table and return a tours object"""
+        self.__data[self.COL_GROUP] = self.__data.apply(lambda tour: self.__get_real_group(tour[self.COL_GROUP], tour[self.COL_TOUR_TYPE]), axis = 1)
         self.__data.sort_values([self.COL_GROUP, self.COL_START_DATE, self.COL_TOUR_TYPE], inplace = True)
         return pd.DataFrame(self.__data, columns = self.__cols_year_program)
 
     def __read_file(self, file_path):
         """Store an object with the xls file content"""
         data = pd.read_csv(file_path, sep = ';')
-        data[self.COL_START_DATE] = pd.to_datetime(data[self.COL_START_DATE])
+        data[self.COL_START_DATE] = pd.to_datetime(data[self.COL_START_DATE], format = '%d.%m.%y')
         self.__data = data
+
+    def __get_real_group(self, group, tour_type):
+        if tour_type == 'Anl' or tour_type == 'Ftn' or tour_type == 'Div':
+            return 'Events'
+        return group

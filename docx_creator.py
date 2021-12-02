@@ -22,7 +22,7 @@ class DocxCreator:
         for row_count, row in self.__tours.iterrows():
             tour_type = row[TourParser.COL_TOUR_TYPE]
             group = row[TourParser.COL_GROUP]
-            if tour_type == 'Anl' or tour_type == 'Ftn' or tour_type == 'Div':
+            if group == 'Events':
                 self.__document = self.__document_events
             elif group == 'Sektion':
                 self.__document = self.__document_section

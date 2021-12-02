@@ -17,8 +17,10 @@ class DocxCreator:
 
     def create(self):
         for committee, addresses in self.__addresses.groupby(AddressParser.COL_COMMITTEE, sort = False):
+            self.__document.add_paragraph('', self.__style_normal)
             self.__document.add_paragraph(committee, self.__style_committee)
             for row_count, row in addresses.iterrows():
+                self.__document.add_paragraph('', self.__style_normal)
                 function = row[AddressParser.COL_FUNCTION]
                 if not pd.isna(function):
                     self.__document.add_paragraph(row[AddressParser.COL_FUNCTION], self.__style_function)

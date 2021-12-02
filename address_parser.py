@@ -13,6 +13,14 @@ class AddressParser(object):
     COL_PHONE_PRIVATE = 'Telefon P'
     COL_PHONE_BUSINESS = 'Telefon G'
     COL_PHONE_MOBILE = 'Mobile'
+    COL_TYPE_SOMMER1 = 'Sommer 1'
+    COL_TYPE_SOMMER2 = 'Sommer 2'
+    COL_TYPE_WINTER1 = 'Winter 1'
+    COL_TYPE_WINTER2 = 'Winter 2'
+    COL_TYPE_SPORTCLIMBING = 'Sport-\nklettern'
+    COL_TYPE_SNOWSHOETOURS = 'Schnee-\nschuhtouren'
+    COL_TYPE_MOUNTAINHIKING = 'Berg-\nwandern'
+    COL_TYPE_ALPINEHIKING = 'Alpin-\nwandern'
 
     def __init__(self, file_path):
         self.__cols_addresses = [
@@ -26,7 +34,15 @@ class AddressParser(object):
                 self.COL_EMAIL,
                 self.COL_PHONE_PRIVATE,
                 self.COL_PHONE_BUSINESS,
-                self.COL_PHONE_MOBILE
+                self.COL_PHONE_MOBILE,
+                self.COL_TYPE_SOMMER1,
+                self.COL_TYPE_SOMMER2,
+                self.COL_TYPE_WINTER1,
+                self.COL_TYPE_WINTER2,
+                self.COL_TYPE_SPORTCLIMBING,
+                self.COL_TYPE_SNOWSHOETOURS,
+                self.COL_TYPE_MOUNTAINHIKING,
+                self.COL_TYPE_ALPINEHIKING
         ]
         self.__read_file(file_path)
 
