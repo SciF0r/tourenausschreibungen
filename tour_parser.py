@@ -30,7 +30,7 @@ class TourParser(object):
     def parse_for_year_program(self):
         """Parse the tours table and return a tours object"""
         self.__data[self.COL_GROUP] = self.__data.apply(lambda tour: self.__get_real_group(tour[self.COL_GROUP], tour[self.COL_TOUR_TYPE]), axis = 1)
-        self.__data.sort_values([self.COL_GROUP, self.COL_START_DATE, self.COL_TOUR_TYPE], inplace = True)
+        self.__data.sort_values([self.COL_START_DATE, self.COL_TOUR_TYPE], inplace = True)
         return pd.DataFrame(self.__data, columns = self.__cols_year_program)
 
     def __read_file(self, file_path):
