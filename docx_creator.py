@@ -22,34 +22,28 @@ class DocxCreator:
         for row_count, row in self.__tours.iterrows():
             tour_type = row[TourParser.COL_TOUR_TYPE]
             groups = row[TourParser.COL_GROUP].split('|')
-            line_added = False
             if 'Events' in groups:
-                self.__document = self.__document_events
-                line_added = True
+                self.__add_line(row, self.__document_events)
             if 'Sektion' in groups:
-                self.__document = self.__document_section
-                line_added = True
+                self.__add_line(row, self.__document_section)
             if 'Familienbergsteigen' in groups:
-                self.__document = self.__document_fabe
-                line_added = True
+                self.__add_line(row, self.__document_fabe)
             if 'Kinderbergsteigen' in groups:
-                self.__document = self.__document_kibe
-                line_added = True
+                self.__add_line(row, self.__document_kibe)
             if 'Jugendorganisation' in groups:
-                self.__document = self.__document_jo
-                line_added = True
-            if not line_added:
-                continue
-            if (self.__is_whole_day(row)):
-                line = '{0}\t{1}\t{2}\t{3}\t{4}'.format(self.__get_date(row), self.__get_duration(row), self.__get_type(row), self.__get_requirements(row), self.__get_info(row))
-            else:
-                line = '{0}\t{1}, {2}\t{3}\t{4}'.format(self.__get_date(row), self.__get_duration(row), self.__get_type(row), self.__get_requirements(row), self.__get_info(row))
-            self.__document.add_paragraph(line, self.__style)
+                self.__add_line(row, self.__document_jo)
         self.__document_section.save(self.__file_name.format('sektion'))
         self.__document_fabe.save(self.__file_name.format('fabe'))
         self.__document_kibe.save(self.__file_name.format('kibe'))
         self.__document_jo.save(self.__file_name.format('jo'))
         self.__document_events.save(self.__file_name.format('anlässe'))
+
+    def __add_line(self, row, document):
+        if (self.__is_whole_day(row)):
+            line = '{0}\t{1}\t{2}\t{3}\t{4}'.format(self.__get_date(row), self.__get_duration(row), self.__get_type(row), self.__get_requirements(row), self.__get_info(row))
+        else:
+            line = '{0}\t{1}, {2}\t{3}\t{4}'.format(self.__get_date(row), self.__get_duration(row), self.__get_type(row), self.__get_requirements(row), self.__get_info(row))
+        document.add_paragraph(line, self.__style)
 
     def __get_date(self, row):
         return row[TourParser.COL_START_DATE].strftime('%a, %d. %b')
