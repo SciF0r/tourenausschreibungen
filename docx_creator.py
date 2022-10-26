@@ -22,17 +22,23 @@ class DocxCreator:
         for row_count, row in self.__tours.iterrows():
             tour_type = row[TourParser.COL_TOUR_TYPE]
             groups = row[TourParser.COL_GROUP].split('|')
+            line_added = False
             if 'Events' in groups:
                 self.__document = self.__document_events
-            elif 'Sektion' in groups:
+                line_added = True
+            if 'Sektion' in groups:
                 self.__document = self.__document_section
-            elif 'Familienbergsteigen' in groups:
+                line_added = True
+            if 'Familienbergsteigen' in groups:
                 self.__document = self.__document_fabe
-            elif 'Kinderbergsteigen' in groups:
+                line_added = True
+            if 'Kinderbergsteigen' in groups:
                 self.__document = self.__document_kibe
-            elif 'Jugendorganisation' in groups:
+                line_added = True
+            if 'Jugendorganisation' in groups:
                 self.__document = self.__document_jo
-            else:
+                line_added = True
+            if not line_added:
                 continue
             if (self.__is_whole_day(row)):
                 line = '{0}\t{1}\t{2}\t{3}\t{4}'.format(self.__get_date(row), self.__get_duration(row), self.__get_type(row), self.__get_requirements(row), self.__get_info(row))
