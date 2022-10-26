@@ -21,16 +21,16 @@ class DocxCreator:
     def create(self):
         for row_count, row in self.__tours.iterrows():
             tour_type = row[TourParser.COL_TOUR_TYPE]
-            group = row[TourParser.COL_GROUP]
-            if group == 'Events':
+            groups = row[TourParser.COL_GROUP].split('|')
+            if 'Events' in groups:
                 self.__document = self.__document_events
-            elif group == 'Sektion':
+            elif 'Sektion' in groups:
                 self.__document = self.__document_section
-            elif group == 'Familienbergsteigen':
+            elif 'Familienbergsteigen' in groups:
                 self.__document = self.__document_fabe
-            elif group == 'Kinderbergsteigen':
+            elif 'Kinderbergsteigen' in groups:
                 self.__document = self.__document_kibe
-            elif group == 'Sektion|Jugendorganisation':
+            elif 'Jugendorganisation' in groups:
                 self.__document = self.__document_jo
             else:
                 continue
