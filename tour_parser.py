@@ -11,6 +11,7 @@ class TourParser(object):
     COL_ACTIVITY = 'Aktivität'
     COL_FIRST_NAME = 'Vorname'
     COL_LAST_NAME = 'Name'
+    EVENT_TYPES = ['Ftn', 'Div']
 
 
     def __init__(self, file_path):
@@ -36,10 +37,10 @@ class TourParser(object):
     def __read_file(self, file_path):
         """Store an object with the xls file content"""
         data = pd.read_csv(file_path, sep = ',')
-        data[self.COL_START_DATE] = pd.to_datetime(data[self.COL_START_DATE], format = '%d.%m.%y')
+        data[self.COL_START_DATE] = pd.to_datetime(data[self.COL_START_DATE], format = '%Y-%m-%d')
         self.__data = data
 
     def __get_real_group(self, group, tour_type):
-        if tour_type == 'Anl' or tour_type == 'Ftn' or tour_type == 'Div':
+        if tour_type in self.EVENT_TYPES:
             return 'Events'
         return group

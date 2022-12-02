@@ -52,6 +52,6 @@ class AddressParser(object):
 
     def __read_file(self, file_path):
         """Store an object with the xls file content"""
-        data = pd.read_csv(file_path, sep = ';')
+        data = pd.read_csv(file_path, sep = ',')
         data[self.COL_ZIP] = data[self.COL_ZIP].astype(pd.Int64Dtype())
         self.__data = data
