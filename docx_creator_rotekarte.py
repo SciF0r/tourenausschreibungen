@@ -172,20 +172,28 @@ class DocxCreatorRoteKarte:
         self.__write_tours('Sektionstouren', self.__tours_sektion)
         self.__write_tours('Familienbergsteigen FaBe', self.__tours_fabe)
         self.__write_tours('Kinderbergsteigen KiBe', self.__tours_kibe)
-        self.__write_tours('Jugendorganisation JO', self.__tours_jo)
-        self.__write_tours('Seniorengruppe A', self.__tours_seniorenA)
-        self.__write_tours('Seniorengruppe B', self.__tours_seniorenB)
-        self.__write_tours('Seniorengruppe C', self.__tours_seniorenC)
+        generic_registration_jo = 'Die Tourendetails erscheinen jeweils auf unserer Homepage (www.jo-aarau.ch) oder auf SAC Aarau-Tourenseite (www.sac-aarau.ch/touren.html), welche sich immer auf dem aktuellsten Stand befinden. Wir bitten euch, die Touren wenn möglich direkt über Drop-Tours anzumelden. Den Link dazu findet ihr auf unserer Homepage. Für Fragen oder Anmeldung zur JO-Aarau Mitgliedschaft bitten wir euch, euch direkt bei Danny Senn telefonisch (078 715 60 88) oder via E-Mail (info@jo-aarau.ch) zu melden.'
+        self.__write_tours('Jugendorganisation JO', self.__tours_jo, generic_registration_jo)
+        generic_registration_seniorenA = 'www.sac-aarau.ch oder Dienstag, 17-18 Uhr, telefonisch an die jeweilige Tourenleitung'
+        self.__write_tours('Seniorengruppe A', self.__tours_seniorenA, generic_registration_seniorenA)
+        generic_registration_seniorenB = 'Mail oder telefonisch am Dienstagabend 17-18 Uhr, beim jeweiligen Tourenleiter'
+        self.__write_tours('Seniorengruppe B', self.__tours_seniorenB, generic_registration_seniorenB)
+        generic_registration_seniorenC = 'Mail oder telefonisch am Mittwochabend 17-18 Uhr, beim jeweiligen Tourenleiter'
+        self.__write_tours('Seniorengruppe C', self.__tours_seniorenC, generic_registration_seniorenC)
         self.__write_tours('Für alle Mitglieder SAC Aarau', self.__tours_events)
         print('Writing tours to {0}...'.format(self.__file_name))
         self.__document.save(self.__file_name)
         print('Done.')
 
-    def __write_tours(self, group_title, tours):
+    def __write_tours(self, group_title, tours, generic_registration = None):
         print('Adding {0} tours for {1}'.format(len(tours), group_title))
         if len(tours) == 0:
             return
         self.__document.add_heading(group_title, 2)
+        if generic_registration:
+            print('Adding generic registration text: {0}'.format(generic_registration))
+            self.__document.add_heading('Anmeldung\t{0}'.format(generic_registration), 3)
+            self.__document.add_paragraph('', self.__style)
         for tour in tours:
             left, right = tour.pop(0)
             self.__document.add_heading('{0}\t{1}'.format(left, right), 3)
