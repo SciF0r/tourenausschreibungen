@@ -20,6 +20,7 @@ if parser_type not in ['jahresprogramm', 'rotekarte']:
 
 parser = TourParser(file_path)
 tours = parser.parse(parser_type)
+tours = tours[tours[TourParser.COL_PROCESS_STATUS] == TourParser.PROCESS_STATUS_APPROVED]
 
 cleaner = TourCleaner(tours)
 with open('rules.txt', 'r') as rules_file:

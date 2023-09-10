@@ -28,8 +28,10 @@ class TourParser(object):
     COL_FIRST_NAME = 'Vorname'
     COL_LAST_NAME = 'Name'
     COL_STATUS = 'Status'
+    COL_PROCESS_STATUS = 'Prozessstatus'
     STATUS_CANCELLED = 'abgesagt'
     STATUS_FULL = 'ausgebucht'
+    PROCESS_STATUS_APPROVED = 'Tour bewilligt & publiziert'
     EVENT_TYPES = ['Ftn', 'Div']
 
 
@@ -46,6 +48,7 @@ class TourParser(object):
                 self.COL_LAST_NAME,
         ]
         self.__cols_rote_karte = [
+                self.COL_PROCESS_STATUS,
                 self.COL_GROUP,
                 self.COL_STATUS,
                 self.COL_START_DATE,
