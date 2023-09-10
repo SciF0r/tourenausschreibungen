@@ -1,6 +1,7 @@
 import sys
 from datetime import datetime
 from docx_creator_jahresprogramm import DocxCreatorJahresprogramm
+from docx_creator_rotekarte import DocxCreatorRoteKarte
 from tour_cleaner import TourCleaner
 from tour_parser import TourParser
 

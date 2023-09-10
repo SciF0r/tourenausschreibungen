@@ -2,6 +2,7 @@ import locale
 import pandas as pd
 from docx import Document
 from tour_parser import TourParser
+from tour_fields import TourFields
 
 class DocxCreatorRoteKarte:
     """Create a docx file from given tours"""
@@ -59,7 +60,7 @@ class DocxCreatorRoteKarte:
     def __add_requirements(self, row, tour):
         requirements = self.__get_requirements(row)
         if requirements:
-            tour.append('Anforderungen', requirements)
+            tour.append(('Anforderungen', requirements))
 
     def __add_metrics(self, row, tour):
         self.__append_if_not_empty(row, tour, TourParser.COL_METRICS, 'Auf-/Abstieg, MZ')
@@ -73,13 +74,13 @@ class DocxCreatorRoteKarte:
     def __add_costs(self, row, tour):
         costs = self.__get_costs(row)
         if costs:
-            tour.append('Kosten', costs)
+            tour.append(('Kosten', costs))
 
     def __add_execution(self, row, tour):
         self.__append_if_not_empty(row, tour, TourParser.COL_EXECUTION, 'Durchführung')
 
     def __add_description(self, row, tour):
-        self.__append_if_not_empty(row, tour, TourParser.COL_ROUTE_DESCRIPTION, 'Route / Details')
+        self.__append_if_not_empty(row, tour, TourParser.COL_DESCRIPTION, 'Route / Details')
 
     def __add_additional_information(self, row, tour):
         self.__append_if_not_empty(row, tour, TourParser.COL_ADDITIONAL_INFORMATION, 'Zusatzinfo')
@@ -90,12 +91,14 @@ class DocxCreatorRoteKarte:
     def __add_registration(self, row, tour):
         registration = self.__get_registration(row)
         if registration:
-            tour.append('Anmeldung', registration)
+            tour.append(('Anmeldung', registration))
 
     def __get_date(self, row):
         start_date = row[TourParser.COL_START_DATE]
         end_date = row[TourParser.COL_END_DATE]
-        if pd.isna(end_date):
+        if pd.isna(start_date):
+            return ''
+        elif pd.isna(end_date):
             return start_date.strftime('%d.%m.%Y')
         else:
             return '{0}-{1}'.format(start_date.strftime('%d'), end_date.strftime('%d.%m.%y'))
@@ -114,14 +117,36 @@ class DocxCreatorRoteKarte:
         costs = row[TourParser.COL_COSTS]
         costs_long = row[TourParser.COL_COSTS_LONG]
         costs_string = ''
-        if not pd.isna(costs):
-            costs_string = 'Fr. {0}.--'
+        if pd.isna(costs):
+            return None
+        else:
+            return 'Fr. {0}.--'
+
+    def __get_registration(self, row):
+        registration_means = row[TourParser.COL_REGISTRATION_MEANS]
+        registration_start_date = row[TourParser.COL_REGISTRATION_START_DATE]
+        registration_end_date = row[TourParser.COL_REGISTRATION_END_DATE]
+
+        registration_fields = []
+        if registration_means:
+            print(registration_means)
+            registration_fields.append(registration_means)
+        if not pd.isna(registration_start_date):
+            registration_fields.append('Anmeldestart {0}'.format(registration_start_date.strftime('%d.%m.%Y')))
+        if not pd.isna(registration_end_date):
+            registration_fields.append('Anmeldestart {0}'.format(registration_end_date.strftime('%d.%m.%Y')))
+        return ', '.join(registration_fields)
 
     def __append_if_not_empty(self, row, tour, field, key):
         value = row[field]
         if value:
-            tour.append(key, value)
+            tour.append((key, value))
 
     def __write_document(self):
-        document.add_paragraph(line, self.__style)
+        self.__document.add_heading('Sektionstouren', 2)
+        for tour in self.tours_sektion:
+            left, right = tour.pop(0)
+            self.__document.add_heading('{0}\t{1}'.format(left, right), 3)
+            for left, right in tour:
+                self.__document.add_paragraph('{0}\t{1}'.format(left, right), self.__style)
         self.__document.save(self.__file_name)

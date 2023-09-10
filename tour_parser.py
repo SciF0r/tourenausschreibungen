@@ -80,9 +80,7 @@ class TourParser(object):
 
     def __read_file(self, file_path):
         """Store an object with the xls file content"""
-        data = pd.read_excel(file_path)
-        data[self.COL_START_DATE] = pd.to_datetime(data[self.COL_START_DATE], format = '%Y-%m-%d')
-        data[self.COL_END_DATE] = pd.to_datetime(data[self.COL_END_DATE], format = '%Y-%m-%d')
+        data = pd.read_excel(file_path, parse_dates=True, date_format='%Y-%m-%d')
         self.__data = data
 
     def __get_real_group(self, group, tour_type):
