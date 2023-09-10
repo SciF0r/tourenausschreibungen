@@ -17,6 +17,7 @@ class TourParser(object):
     COL_EXECUTION = 'Durchführungskontakt'
     COL_MEETING_POINT = 'Treffpunkt'
     COL_DESCRIPTION = 'Routenbeschreibung'
+    COL_ADDITIONAL_INFORMATION = 'Zusatzinfo'
     COL_GEAR = 'Ausrüstung'
     COL_REGISTRATION_MEANS = 'Anmeldung'
     COL_REGISTRATION_START_DATE = 'Anmeldestart'
@@ -60,6 +61,7 @@ class TourParser(object):
                 self.COL_EXECUTION,
                 self.COL_MEETING_POINT,
                 self.COL_DESCRIPTION,
+                self.COL_ADDITIONAL_INFORMATION,
                 self.COL_GEAR,
                 self.COL_REGISTRATION_MEANS,
                 self.COL_REGISTRATION_START_DATE,
@@ -80,6 +82,7 @@ class TourParser(object):
         """Store an object with the xls file content"""
         data = pd.read_excel(file_path)
         data[self.COL_START_DATE] = pd.to_datetime(data[self.COL_START_DATE], format = '%Y-%m-%d')
+        data[self.COL_END_DATE] = pd.to_datetime(data[self.COL_END_DATE], format = '%Y-%m-%d')
         self.__data = data
 
     def __get_real_group(self, group, tour_type):
