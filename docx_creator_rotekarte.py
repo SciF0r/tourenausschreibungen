@@ -36,18 +36,32 @@ class DocxCreatorRoteKarte:
 
     def __add_tour(self, row, tours_group):
         tour = []
-        self.__add_activity(row, tour)
-        self.__add_guide(row, tour)
-        self.__add_requirements(row, tour)
-        self.__add_metrics(row, tour)
-        self.__add_route(row, tour)
-        self.__add_hospitality(row, tour)
-        self.__add_costs(row, tour)
-        self.__add_execution(row, tour)
-        self.__add_description(row, tour)
-        self.__add_additional_information(row, tour)
-        self.__add_gear(row, tour)
-        self.__add_registration(row, tour)
+        status = row[TourParser.COL_STATUS]
+        if status == TourParser.STATUS_CANCELLED:
+            row[TourParser.COL_ACTIVITY] = '{0}, abgesagt'.format(row[TourParser.COL_ACTIVITY])
+            self.__add_activity(row, tour)
+            self.__add_guide(row, tour)
+            self.__add_requirements(row, tour)
+        elif status == TourParser.STATUS_FULL:
+            row[TourParser.COL_ACTIVITY] = '{0}, ausgebucht'.format(row[TourParser.COL_ACTIVITY])
+            self.__add_activity(row, tour)
+            self.__add_guide(row, tour)
+            self.__add_requirements(row, tour)
+            self.__add_meeting_point(row, tour)
+        else:
+            self.__add_activity(row, tour)
+            self.__add_guide(row, tour)
+            self.__add_requirements(row, tour)
+            self.__add_metrics(row, tour)
+            self.__add_route(row, tour)
+            self.__add_hospitality(row, tour)
+            self.__add_costs(row, tour)
+            self.__add_execution(row, tour)
+            self.__add_meeting_point(row, tour)
+            self.__add_description(row, tour)
+            self.__add_additional_information(row, tour)
+            self.__add_gear(row, tour)
+            self.__add_registration(row, tour)
         tours_group.append(tour)
 
     def __add_activity(self, row, tour):
@@ -77,6 +91,9 @@ class DocxCreatorRoteKarte:
 
     def __add_execution(self, row, tour):
         self.__append_if_not_empty(row, tour, TourParser.COL_EXECUTION, 'Durchführung')
+
+    def __add_meeting_point(self, row, tour):
+        self.__append_if_not_empty(row, tour, TourParser.COL_MEETING_POINT, 'Treffpunkt')
 
     def __add_description(self, row, tour):
         self.__append_if_not_empty(row, tour, TourParser.COL_DESCRIPTION, 'Route / Details')
@@ -118,8 +135,10 @@ class DocxCreatorRoteKarte:
         costs_string = ''
         if pd.isna(costs):
             return None
-        else:
+        elif pd.isna(costs_long):
             return 'Fr. {0}.--'.format(costs)
+        else:
+            return 'Fr. {0}.-- {1}'.format(costs, costs_long)
 
     def __get_registration(self, row):
         registration_means = row[TourParser.COL_REGISTRATION_MEANS]
@@ -141,11 +160,17 @@ class DocxCreatorRoteKarte:
             tour.append((key, value))
 
     def __write_document(self):
-        self.__document.add_heading('Sektionstouren', 2)
-        for tour in self.__tours_sektion:
+        self.__write_tours('Sektionstouren', self.__tours_sektion)
+        print('Writing tours to {0}...'.format(self.__file_name))
+        self.__document.save(self.__file_name)
+        print('Done.')
+
+    def __write_tours(self, group_title, tours):
+        print('Adding {0} tours for {1}'.format(len(tours), group_title))
+        self.__document.add_heading(group_title, 2)
+        for tour in tours:
             left, right = tour.pop(0)
             self.__document.add_heading('{0}\t{1}'.format(left, right), 3)
             for left, right in tour:
                 self.__document.add_paragraph('{0}\t{1}'.format(left, right), self.__style)
             self.__document.add_paragraph('', self.__style)
-        self.__document.save(self.__file_name)

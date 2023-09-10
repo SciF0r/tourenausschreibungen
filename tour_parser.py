@@ -28,6 +28,8 @@ class TourParser(object):
     COL_FIRST_NAME = 'Vorname'
     COL_LAST_NAME = 'Name'
     COL_STATUS = 'Status'
+    STATUS_CANCELLED = 'abgesagt'
+    STATUS_FULL = 'ausgebucht'
     EVENT_TYPES = ['Ftn', 'Div']
 
 
