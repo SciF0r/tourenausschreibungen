@@ -2,17 +2,16 @@ import locale
 import pandas as pd
 from docx import Document
 from tour_parser import TourParser
-from tour_fields import TourFields
 
 class DocxCreatorRoteKarte:
     """Create a docx file from given tours"""
     __template = 'tourenausschreibungen_template.docx'
     __style = 'Standard_Ausschreibungen'
-    __tours_events = []
     __tours_sektion = []
     __tours_fabe = []
     __tours_kibe = []
     __tours_jo = []
+    __tours_events = []
 
     def __init__(self, tours, file_name):
         self.__file_name = file_name
