@@ -22,8 +22,6 @@ class DocxCreatorRoteKarte:
     def create(self):
         for row_count, row in self.__tours.iterrows():
             groups = row[TourParser.COL_GROUP].split('|')
-            if 'Events' in groups:
-                self.__add_tour(row, self.__tours_events)
             if 'Sektion' in groups:
                 self.__add_tour(row, self.__tours_sektion)
             if 'Familienbergsteigen' in groups:
@@ -32,6 +30,8 @@ class DocxCreatorRoteKarte:
                 self.__add_tour(row, self.__tours_kibe)
             if 'Jugendorganisation' in groups:
                 self.__add_tour(row, self.__tours_jo)
+            if 'Events' in groups:
+                self.__add_tour(row, self.__tours_events)
         self.__write_document()
 
     def __add_tour(self, row, tours_group):
@@ -161,12 +161,18 @@ class DocxCreatorRoteKarte:
 
     def __write_document(self):
         self.__write_tours('Sektionstouren', self.__tours_sektion)
+        self.__write_tours('Familienbergsteigen FaBe', self.__tours_fabe)
+        self.__write_tours('Kinderbergsteigen KiBe', self.__tours_kibe)
+        self.__write_tours('Jugendorganisation JO', self.__tours_jo)
+        self.__write_tours('Für alle Mitglieder SAC Aarau', self.__tours_events)
         print('Writing tours to {0}...'.format(self.__file_name))
         self.__document.save(self.__file_name)
         print('Done.')
 
     def __write_tours(self, group_title, tours):
         print('Adding {0} tours for {1}'.format(len(tours), group_title))
+        if len(tours) == 0:
+            return
         self.__document.add_heading(group_title, 2)
         for tour in tours:
             left, right = tour.pop(0)
