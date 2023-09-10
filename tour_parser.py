@@ -36,6 +36,7 @@ class TourParser(object):
     TOUR_TYPE_FITNESS = 'Ftn'
     TOUR_TYPE_ASSEMBLY = 'Vlg'
     TOUR_TYPE_EVENT = 'Anl'
+    TOUR_TYPE_MISC = 'Div'
 
 
     def __init__(self, file_path):
@@ -81,7 +82,7 @@ class TourParser(object):
 
     def parse(self, parser_type):
         """Parse the tours table and return a tours object"""
-        self.__data[self.COL_GROUP] = self.__data.apply(lambda tour: self.__get_real_group(tour[self.COL_GROUP], tour[self.COL_TOUR_TYPE]), axis = 1)
+        self.__data[self.COL_GROUP] = self.__data.apply(lambda tour: self.__get_groups(tour[self.COL_GROUP], tour[self.COL_TOUR_TYPE]), axis = 1)
         self.__data.sort_values([self.COL_START_DATE, self.COL_TOUR_TYPE], inplace = True)
         if parser_type == 'jahresprogramm':
             return pd.DataFrame(self.__data, columns = self.__cols_year_program)
@@ -93,9 +94,12 @@ class TourParser(object):
         data = pd.read_excel(file_path, parse_dates=True, date_format='%Y-%m-%d')
         self.__data = data
 
-    def __get_real_group(self, group, tour_type):
+    def __get_groups(self, groups_string, tour_type):
+        groups = groups_string.split('|')
         if tour_type == self.TOUR_TYPE_FITNESS:
-            return 'Alle'
-        if tour_type == self.TOUR_TYPE_ASSEMBLY or (tour_type == self.TOUR_TYPE_EVENT and group == 'Alle'):
-            return 'Versammlungen'
-        return group
+            return ['Alle']
+        if tour_type == self.TOUR_TYPE_MISC and 'Sektion' in groups:
+            return ['Alle']
+        if tour_type == self.TOUR_TYPE_ASSEMBLY:
+            return ['Versammlungen']
+        return groups

@@ -15,15 +15,18 @@ class DocxCreatorJahresprogramm:
         self.__document_fabe = Document(self.__template)
         self.__document_kibe = Document(self.__template)
         self.__document_jo = Document(self.__template)
+        self.__document_all = Document(self.__template)
         self.__document_events = Document(self.__template)
         locale.setlocale(locale.LC_ALL, 'de_CH')
 
     def create(self):
         for row_count, row in self.__tours.iterrows():
             tour_type = row[TourParser.COL_TOUR_TYPE]
-            groups = row[TourParser.COL_GROUP].split('|')
-            if 'Events' in groups:
+            groups = row[TourParser.COL_GROUP]
+            if 'Versammlungen' in groups:
                 self.__add_line(row, self.__document_events)
+            if 'Alle' in groups:
+                self.__add_line(row, self.__document_all)
             if 'Sektion' in groups:
                 self.__add_line(row, self.__document_section)
             if 'Familienbergsteigen' in groups:
@@ -36,6 +39,7 @@ class DocxCreatorJahresprogramm:
         self.__document_fabe.save(self.__file_name.format('fabe'))
         self.__document_kibe.save(self.__file_name.format('kibe'))
         self.__document_jo.save(self.__file_name.format('jo'))
+        self.__document_all.save(self.__file_name.format('alle'))
         self.__document_events.save(self.__file_name.format('anlässe'))
 
     def __add_line(self, row, document):

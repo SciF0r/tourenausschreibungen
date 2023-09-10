@@ -25,7 +25,7 @@ class DocxCreatorRoteKarte:
 
     def create(self):
         for row_count, row in self.__tours.iterrows():
-            groups = row[TourParser.COL_GROUP].split('|')
+            groups = row[TourParser.COL_GROUP]
             if 'Sektion' in groups:
                 self.__add_tour(row, self.__tours_sektion)
             if 'Familienbergsteigen' in groups:
