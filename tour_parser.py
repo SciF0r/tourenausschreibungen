@@ -37,6 +37,7 @@ class TourParser(object):
 
     def __init__(self, file_path):
         self.__cols_year_program = [
+                self.COL_PROCESS_STATUS,
                 self.COL_GROUP,
                 self.COL_START_DATE,
                 self.COL_DURATION,
