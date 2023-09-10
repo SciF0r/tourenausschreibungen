@@ -142,7 +142,7 @@ class DocxCreatorRoteKarte:
         costs = row[TourParser.COL_COSTS]
         costs_long = row[TourParser.COL_COSTS_LONG]
         costs_string = ''
-        if pd.isna(costs):
+        if costs == 0:
             return None
         elif pd.isna(costs_long):
             return 'Fr. {0}.--'.format(costs)
