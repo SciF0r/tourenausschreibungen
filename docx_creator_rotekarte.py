@@ -120,7 +120,7 @@ class DocxCreatorRoteKarte:
         if pd.isna(costs):
             return None
         else:
-            return 'Fr. {0}.--'
+            return 'Fr. {0}.--'.format(costs)
 
     def __get_registration(self, row):
         registration_means = row[TourParser.COL_REGISTRATION_MEANS]
@@ -128,8 +128,7 @@ class DocxCreatorRoteKarte:
         registration_end_date = row[TourParser.COL_REGISTRATION_END_DATE]
 
         registration_fields = []
-        if registration_means:
-            print(registration_means)
+        if not pd.isna(registration_means):
             registration_fields.append(registration_means)
         if not pd.isna(registration_start_date):
             registration_fields.append('Anmeldestart {0}'.format(registration_start_date.strftime('%d.%m.%Y')))
@@ -139,14 +138,15 @@ class DocxCreatorRoteKarte:
 
     def __append_if_not_empty(self, row, tour, field, key):
         value = row[field]
-        if value:
+        if not pd.isna(value):
             tour.append((key, value))
 
     def __write_document(self):
         self.__document.add_heading('Sektionstouren', 2)
-        for tour in self.tours_sektion:
+        for tour in self.__tours_sektion:
             left, right = tour.pop(0)
             self.__document.add_heading('{0}\t{1}'.format(left, right), 3)
             for left, right in tour:
                 self.__document.add_paragraph('{0}\t{1}'.format(left, right), self.__style)
+            self.__document.add_paragraph('', self.__style)
         self.__document.save(self.__file_name)
