@@ -14,7 +14,7 @@ class DocxCreatorRoteKarte:
     __tours_seniorenA = []
     __tours_seniorenB = []
     __tours_seniorenC = []
-    __tours_events = []
+    __tours_alle = []
 
     def __init__(self, tours, file_name):
         self.__file_name = file_name
@@ -39,20 +39,18 @@ class DocxCreatorRoteKarte:
                 self.__add_tour(row, self.__tours_seniorenB)
             if 'SeniorenC' in groups:
                 self.__add_tour(row, self.__tours_seniorenC)
-            if 'Events' in groups:
-                self.__add_tour(row, self.__tours_events)
+            if 'Alle' in groups:
+                self.__add_tour(row, self.__tours_alle)
         self.__write_document()
 
     def __add_tour(self, row, tours_group):
         tour = []
         status = row[TourParser.COL_STATUS]
         if status == TourParser.STATUS_CANCELLED:
-            row[TourParser.COL_ACTIVITY] = '{0}, abgesagt'.format(row[TourParser.COL_ACTIVITY])
             self.__add_activity(row, tour)
             self.__add_guide(row, tour)
             self.__add_requirements(row, tour)
         elif status == TourParser.STATUS_FULL:
-            row[TourParser.COL_ACTIVITY] = '{0}, ausgebucht'.format(row[TourParser.COL_ACTIVITY])
             self.__add_activity(row, tour)
             self.__add_guide(row, tour)
             self.__add_requirements(row, tour)
@@ -65,6 +63,7 @@ class DocxCreatorRoteKarte:
             self.__add_route(row, tour)
             self.__add_hospitality(row, tour)
             self.__add_costs(row, tour)
+            self.__add_maps(row, tour)
             self.__add_execution(row, tour)
             self.__add_meeting_point(row, tour)
             self.__add_description(row, tour)
@@ -74,7 +73,13 @@ class DocxCreatorRoteKarte:
         tours_group.append(tour)
 
     def __add_activity(self, row, tour):
-        tour.append((self.__get_date(row), row[TourParser.COL_ACTIVITY]))
+        activity = row[TourParser.COL_ACTIVITY]
+        status = row[TourParser.COL_STATUS]
+        if status == TourParser.STATUS_CANCELLED:
+            activity = '{0}, abgesagt'.format(activity)
+        if status == TourParser.STATUS_FULL:
+            activity = '{0}, ausgebucht'.format(activity)
+        tour.append((self.__get_date(row), activity))
 
     def __add_guide(self, row, tour):
         tour.append((row[TourParser.COL_TOUR_TYPE_LONG], row[TourParser.COL_GUIDE]))
@@ -97,6 +102,9 @@ class DocxCreatorRoteKarte:
         costs = self.__get_costs(row)
         if costs:
             tour.append(('Kosten', costs))
+
+    def __add_maps(self, row, tour):
+        self.__append_if_not_empty(row, tour, TourParser.COL_MAPS, 'Karten')
 
     def __add_execution(self, row, tour):
         self.__append_if_not_empty(row, tour, TourParser.COL_EXECUTION, 'Durchführung')
@@ -130,12 +138,12 @@ class DocxCreatorRoteKarte:
 
     def __get_requirements(self, row):
         conditions = []
-        cond_req = row[TourParser.COL_COND_REQ]
-        if not pd.isna(cond_req):
-            conditions.append(cond_req)
         cond_tech = row[TourParser.COL_TECH_REQ]
         if not pd.isna(cond_tech):
             conditions.append(cond_tech)
+        cond_req = row[TourParser.COL_COND_REQ]
+        if not pd.isna(cond_req):
+            conditions.append(cond_req)
         return ', '.join(conditions)
 
     def __get_costs(self, row):
@@ -160,7 +168,7 @@ class DocxCreatorRoteKarte:
         if not pd.isna(registration_start_date):
             registration_fields.append('Anmeldestart {0}'.format(registration_start_date.strftime('%d.%m.%Y')))
         if not pd.isna(registration_end_date):
-            registration_fields.append('Anmeldestart {0}'.format(registration_end_date.strftime('%d.%m.%Y')))
+            registration_fields.append('Anmeldeschluss {0}'.format(registration_end_date.strftime('%d.%m.%Y')))
         return ', '.join(registration_fields)
 
     def __append_if_not_empty(self, row, tour, field, key):
@@ -180,7 +188,7 @@ class DocxCreatorRoteKarte:
         self.__write_tours('Seniorengruppe B', self.__tours_seniorenB, generic_registration_seniorenB)
         generic_registration_seniorenC = 'Mail oder telefonisch am Mittwochabend 17-18 Uhr, beim jeweiligen Tourenleiter'
         self.__write_tours('Seniorengruppe C', self.__tours_seniorenC, generic_registration_seniorenC)
-        self.__write_tours('Für alle Mitglieder SAC Aarau', self.__tours_events)
+        self.__write_tours('Für alle Mitglieder SAC Aarau', self.__tours_alle)
         print('Writing tours to {0}...'.format(self.__file_name))
         self.__document.save(self.__file_name)
         print('Done.')

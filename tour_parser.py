@@ -14,6 +14,7 @@ class TourParser(object):
     COL_HOSPITALITY = 'Unterkunft / Verpflegung'
     COL_COSTS = 'Kosten'
     COL_COSTS_LONG = 'Kosten lang'
+    COL_MAPS = 'Karten'
     COL_EXECUTION = 'Durchführungskontakt'
     COL_MEETING_POINT = 'Treffpunkt'
     COL_DESCRIPTION = 'Routenbeschreibung'
@@ -32,7 +33,7 @@ class TourParser(object):
     STATUS_CANCELLED = 'abgesagt'
     STATUS_FULL = 'ausgebucht'
     PROCESS_STATUS_APPROVED = 'Tour bewilligt & publiziert'
-    EVENT_TYPES = ['Ftn', 'Div']
+    TOUR_TYPE_FITNESS = 'Ftn'
 
 
     def __init__(self, file_path):
@@ -64,6 +65,7 @@ class TourParser(object):
                 self.COL_HOSPITALITY,
                 self.COL_COSTS,
                 self.COL_COSTS_LONG,
+                self.COL_MAPS,
                 self.COL_EXECUTION,
                 self.COL_MEETING_POINT,
                 self.COL_DESCRIPTION,
@@ -90,6 +92,6 @@ class TourParser(object):
         self.__data = data
 
     def __get_real_group(self, group, tour_type):
-        if tour_type in self.EVENT_TYPES:
-            return 'Events'
+        if tour_type == self.TOUR_TYPE_FITNESS:
+            return 'Alle'
         return group
