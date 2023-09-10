@@ -34,6 +34,8 @@ class TourParser(object):
     STATUS_FULL = 'ausgebucht'
     PROCESS_STATUS_APPROVED = 'Tour bewilligt & publiziert'
     TOUR_TYPE_FITNESS = 'Ftn'
+    TOUR_TYPE_ASSEMBLY = 'Vlg'
+    TOUR_TYPE_EVENT = 'Anl'
 
 
     def __init__(self, file_path):
@@ -94,4 +96,6 @@ class TourParser(object):
     def __get_real_group(self, group, tour_type):
         if tour_type == self.TOUR_TYPE_FITNESS:
             return 'Alle'
+        if tour_type == self.TOUR_TYPE_ASSEMBLY or (tour_type == self.TOUR_TYPE_EVENT and group == 'Alle'):
+            return 'Versammlungen'
         return group

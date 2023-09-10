@@ -15,6 +15,7 @@ class DocxCreatorRoteKarte:
     __tours_seniorenB = []
     __tours_seniorenC = []
     __tours_alle = []
+    __tours_versammlungen = []
 
     def __init__(self, tours, file_name):
         self.__file_name = file_name
@@ -41,6 +42,8 @@ class DocxCreatorRoteKarte:
                 self.__add_tour(row, self.__tours_seniorenC)
             if 'Alle' in groups:
                 self.__add_tour(row, self.__tours_alle)
+            if 'Versammlungen' in groups:
+                self.__add_tour(row, self.__tours_versammlungen)
         self.__write_document()
 
     def __add_tour(self, row, tours_group):
@@ -189,6 +192,7 @@ class DocxCreatorRoteKarte:
         generic_registration_seniorenC = 'Mail oder telefonisch am Mittwochabend 17-18 Uhr, beim jeweiligen Tourenleiter'
         self.__write_tours('Seniorengruppe C', self.__tours_seniorenC, generic_registration_seniorenC)
         self.__write_tours('Für alle Mitglieder SAC Aarau', self.__tours_alle)
+        self.__write_tours('Versammlungen und Vorträge', self.__tours_versammlungen)
         print('Writing tours to {0}...'.format(self.__file_name))
         self.__document.save(self.__file_name)
         print('Done.')
