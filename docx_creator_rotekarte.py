@@ -11,6 +11,9 @@ class DocxCreatorRoteKarte:
     __tours_fabe = []
     __tours_kibe = []
     __tours_jo = []
+    __tours_seniorenA = []
+    __tours_seniorenB = []
+    __tours_seniorenC = []
     __tours_events = []
 
     def __init__(self, tours, file_name):
@@ -30,6 +33,12 @@ class DocxCreatorRoteKarte:
                 self.__add_tour(row, self.__tours_kibe)
             if 'Jugendorganisation' in groups:
                 self.__add_tour(row, self.__tours_jo)
+            if 'SeniorenA' in groups:
+                self.__add_tour(row, self.__tours_seniorenA)
+            if 'SeniorenB' in groups:
+                self.__add_tour(row, self.__tours_seniorenB)
+            if 'SeniorenC' in groups:
+                self.__add_tour(row, self.__tours_seniorenC)
             if 'Events' in groups:
                 self.__add_tour(row, self.__tours_events)
         self.__write_document()
@@ -164,6 +173,9 @@ class DocxCreatorRoteKarte:
         self.__write_tours('Familienbergsteigen FaBe', self.__tours_fabe)
         self.__write_tours('Kinderbergsteigen KiBe', self.__tours_kibe)
         self.__write_tours('Jugendorganisation JO', self.__tours_jo)
+        self.__write_tours('Seniorengruppe A', self.__tours_seniorenA)
+        self.__write_tours('Seniorengruppe B', self.__tours_seniorenB)
+        self.__write_tours('Seniorengruppe C', self.__tours_seniorenC)
         self.__write_tours('Für alle Mitglieder SAC Aarau', self.__tours_events)
         print('Writing tours to {0}...'.format(self.__file_name))
         self.__document.save(self.__file_name)
