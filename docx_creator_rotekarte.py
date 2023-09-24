@@ -1,5 +1,6 @@
 import locale
 import pandas as pd
+import re
 from docx import Document
 from tour_parser import TourParser
 
@@ -85,7 +86,8 @@ class DocxCreatorRoteKarte:
         tour.append((self.__get_date(row), activity))
 
     def __add_guide(self, row, tour):
-        tour.append((row[TourParser.COL_TOUR_TYPE_LONG], row[TourParser.COL_GUIDE]))
+        guide = re.sub('(.*?), .*?, (Telefon|Mobile.*)', '\\1, \\2', row[TourParser.COL_GUIDE])
+        tour.append((row[TourParser.COL_TOUR_TYPE_LONG], guide))
 
     def __add_requirements(self, row, tour):
         requirements = self.__get_requirements(row)
