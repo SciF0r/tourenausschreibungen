@@ -3,7 +3,7 @@ import pandas as pd
 from docx import Document
 from address_parser import AddressParser
 
-class DocxCreator:
+class DocxCreatorAdressen:
     """Create a docx file from given addresses"""
     __template = 'addresses_template.docx'
     __style_normal = 'Normal'

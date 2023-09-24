@@ -9,7 +9,7 @@ if len(sys.argv) != 2:
 
 file_path = sys.argv[1]
 
-print('Getting tours from {0}'.format(file_path))
+print('Getting addresses from {0}'.format(file_path))
 parser = AddressParser(file_path)
 addresses = parser.parse_for_year_program()
 
