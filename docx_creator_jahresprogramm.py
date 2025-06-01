@@ -21,7 +21,6 @@ class DocxCreatorJahresprogramm:
 
     def create(self):
         for row_count, row in self.__tours.iterrows():
-            tour_type = row[TourParser.COL_TOUR_TYPE]
             groups = row[TourParser.COL_GROUP]
             if 'Versammlungen' in groups:
                 self.__add_line(row, self.__document_events)
