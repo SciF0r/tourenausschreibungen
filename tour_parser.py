@@ -8,7 +8,7 @@ class TourParser(object):
     COL_DURATION = 'Dauer'
     COL_TOUR_TYPE = 'Tourtyp'
     COL_TOUR_TYPE_LONG = 'Tourtyp lang'
-    COL_GUIDE = 'Tourenleiter 1'
+    COL_GUIDE = 'Tourenleiter'
     COL_METRICS = 'Auf-, Abstieg/Marschzeit'
     COL_ROUTE = 'Reiseroute'
     COL_HOSPITALITY = 'Unterkunft / Verpflegung'
