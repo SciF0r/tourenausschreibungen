@@ -78,6 +78,18 @@ class TourParser(object):
                 self.COL_REGISTRATION_START_DATE,
                 self.COL_REGISTRATION_END_DATE,
         ]
+        self.__cols_rote_karte_neu = [
+                self.COL_PROCESS_STATUS,
+                self.COL_GROUP,
+                self.COL_START_DATE,
+                self.COL_DURATION,
+                self.COL_TOUR_TYPE,
+                self.COL_COND_REQ,
+                self.COL_TECH_REQ,
+                self.COL_ACTIVITY,
+                self.COL_FIRST_NAME,
+                self.COL_LAST_NAME,
+        ]
         self.__read_file(file_path)
 
     def parse(self, parser_type):
@@ -88,6 +100,8 @@ class TourParser(object):
             return pd.DataFrame(self.__data, columns = self.__cols_year_program)
         elif parser_type == 'rotekarte':
             return pd.DataFrame(self.__data, columns = self.__cols_rote_karte)
+        elif parser_type == 'rotekarteneu':
+            return pd.DataFrame(self.__data, columns = self.__cols_rote_karte_neu)
 
     def __read_file(self, file_path):
         """Store an object with the xls file content"""
