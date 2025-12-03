@@ -90,6 +90,7 @@ class TourParser(object):
                 self.COL_FIRST_NAME,
                 self.COL_LAST_NAME,
         ]
+        self.__cols_rote_karte_neu_tabelle = self.__cols_rote_karte_neu
         self.__read_file(file_path)
 
     def parse(self, parser_type):
@@ -102,6 +103,8 @@ class TourParser(object):
             return pd.DataFrame(self.__data, columns = self.__cols_rote_karte)
         elif parser_type == 'rotekarteneu':
             return pd.DataFrame(self.__data, columns = self.__cols_rote_karte_neu)
+        elif parser_type == 'rotekarteneutabelle':
+            return pd.DataFrame(self.__data, columns = self.__cols_rote_karte_neu_tabelle)
 
     def __read_file(self, file_path):
         """Store an object with the xls file content"""

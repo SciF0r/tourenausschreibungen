@@ -4,12 +4,13 @@ from docx_creator_adressen import DocxCreatorAdressen
 from docx_creator_jahresprogramm import DocxCreatorJahresprogramm
 from docx_creator_rotekarte import DocxCreatorRoteKarte
 from docx_creator_rotekarteneu import DocxCreatorRoteKarteNeu
+from docx_creator_rotekarteneutabelle import DocxCreatorRoteKarteNeuTabelle
 from tour_cleaner import TourCleaner
 from address_parser import AddressParser
 from tour_parser import TourParser
 
 if len(sys.argv) != 3:
-    print('Usage: {0} adressen|jahresprogramm|rotekarte|rotekarteneu path_to_xlsx_file'.format(sys.argv[0]))
+    print('Usage: {0} adressen|jahresprogramm|rotekarte|rotekarteneu|rotekarteneutabelle path_to_xlsx_file'.format(sys.argv[0]))
     sys.exit(1)
 
 parser_type = sys.argv[1].lower()
@@ -17,8 +18,8 @@ file_path = sys.argv[2]
 
 print('Getting tours from {0}'.format(file_path))
 
-if parser_type not in ['adressen', 'jahresprogramm', 'rotekarte', 'rotekarteneu']:
-    print('Usage: {0} adressen|jahresprogramm|rotekarte path_to_xlsx_file'.format(sys.argv[0]))
+if parser_type not in ['adressen', 'jahresprogramm', 'rotekarte', 'rotekarteneu', 'rotekarteneutabelle']:
+    print('Usage: {0} adressen|jahresprogramm|rotekarte|rotekarteneu|rotekarteneutabelle path_to_xlsx_file'.format(sys.argv[0]))
     sys.exit(1)
 
 if parser_type == 'adressen':
@@ -42,6 +43,9 @@ else:
     elif parser_type == 'rotekarteneu':
         export_file_name = '{0}_{1}_{2}.docx'.format(datetime.now().strftime('%Y-%m-%d_%H_%M_%S'), parser_type, '{0}')
         docx_creator = DocxCreatorRoteKarteNeu(cleaned_tours, export_file_name)
+    elif parser_type == 'rotekarteneutabelle':
+        export_file_name = '{0}_{1}_{2}.docx'.format(datetime.now().strftime('%Y-%m-%d_%H_%M_%S'), parser_type, '{0}')
+        docx_creator = DocxCreatorRoteKarteNeuTabelle(cleaned_tours, export_file_name)
     else:
         export_file_name = '{0}_{1}.docx'.format(datetime.now().strftime('%Y-%m-%d_%H_%M_%S'), parser_type)
         docx_creator = DocxCreatorRoteKarte(cleaned_tours, export_file_name)
