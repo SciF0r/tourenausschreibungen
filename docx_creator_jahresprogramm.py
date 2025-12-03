@@ -43,9 +43,21 @@ class DocxCreatorJahresprogramm:
 
     def __add_line(self, row, document):
         if (self.__is_whole_day(row)):
-            line = '{0}\t{1}\t{2}\t{3}\t{4}'.format(self.__get_date(row), self.__get_duration(row), self.__get_type(row), self.__get_requirements(row), self.__get_info(row))
+            line = '{0}\t{1}\t{2}\t{3}\t{4}'.format(
+                self.__get_date(row),
+                self.__get_duration(row),
+                self.__get_type(row),
+                self.__get_requirements(row),
+                self.__get_info(row)
+            )
         else:
-            line = '{0}\t{1}, {2}\t{3}\t{4}'.format(self.__get_date(row), self.__get_duration(row), self.__get_type(row), self.__get_requirements(row), self.__get_info(row))
+            line = '{0}\t{1}, {2}\t{3}\t{4}'.format(
+                self.__get_date(row),
+                self.__get_duration(row),
+                self.__get_type(row),
+                self.__get_requirements(row),
+                self.__get_info(row)
+            )
         document.add_paragraph(line, self.__style)
 
     def __get_date(self, row):
@@ -71,7 +83,11 @@ class DocxCreatorJahresprogramm:
         return ', '.join(conditions)
 
     def __get_info(self, row):
-        return '{0}\n{1} {2}'.format(row[TourParser.COL_ACTIVITY], row[TourParser.COL_FIRST_NAME], row[TourParser.COL_LAST_NAME])
+        return '{0}\n{1} {2}'.format(
+            row[TourParser.COL_ACTIVITY],
+            row[TourParser.COL_FIRST_NAME],
+            row[TourParser.COL_LAST_NAME]
+        )
 
     def __is_whole_day(self, row):
         return 'Tag' in row[TourParser.COL_DURATION]
