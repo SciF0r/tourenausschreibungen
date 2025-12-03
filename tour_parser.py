@@ -3,8 +3,8 @@ import pandas as pd
 class TourParser(object):
     """Parse tours retrieved from a DropTours xlsx export file"""
     COL_GROUP = 'Gruppe'
-    COL_START_DATE = 'Startdatum'
-    COL_END_DATE = 'Enddatum'
+    COL_START_DATE = 'Start'
+    COL_END_DATE = 'Ende'
     COL_DURATION = 'Dauer'
     COL_TOUR_TYPE = 'Tourtyp'
     COL_TOUR_TYPE_LONG = 'Tourtyp lang'
