@@ -16,6 +16,9 @@ class DocxCreatorRoteKarteNeu:
         self.__document_kibe = Document(self.__template)
         self.__document_jo = Document(self.__template)
         self.__document_all = Document(self.__template)
+        self.__document_seniorenA = Document(self.__template)
+        self.__document_seniorenB = Document(self.__template)
+        self.__document_seniorenC  = Document(self.__template)
         self.__document_events = Document(self.__template)
         locale.setlocale(locale.LC_ALL, 'de_CH')
 
@@ -34,10 +37,19 @@ class DocxCreatorRoteKarteNeu:
                 self.__add_line(row, self.__document_kibe)
             if 'Jugendorganisation' in groups:
                 self.__add_line(row, self.__document_jo)
+            if 'SeniorenA' in groups:
+                self.__add_line(row, self.__document_seniorenA)
+            if 'SeniorenB' in groups:
+                self.__add_line(row, self.__document_seniorenB)
+            if 'SeniorenC' in groups:
+                self.__add_line(row, self.__document_seniorenC)
         self.__document_section.save(self.__file_name.format('sektion'))
         self.__document_fabe.save(self.__file_name.format('fabe'))
         self.__document_kibe.save(self.__file_name.format('kibe'))
         self.__document_jo.save(self.__file_name.format('jo'))
+        self.__document_seniorenA.save(self.__file_name.format('seniorenA'))
+        self.__document_seniorenB.save(self.__file_name.format('seniorenB'))
+        self.__document_seniorenC.save(self.__file_name.format('seniorenC'))
         self.__document_all.save(self.__file_name.format('alle'))
         self.__document_events.save(self.__file_name.format('anlässe'))
 
